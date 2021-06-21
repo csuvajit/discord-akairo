@@ -2,9 +2,9 @@ declare module 'discord-akairo' {
     import {
         BufferResolvable, Client, ClientOptions, Collection,
         Message, MessageAttachment, MessageEmbed,
-        MessageAdditions, MessageEditOptions, MessageOptions, SplitOptions,
+        MessageEditOptions, MessageOptions, SplitOptions,
         User, UserResolvable, GuildMember,
-        Channel, Role, Emoji, Guild,
+        Channel, Role, Emoji, Guild, ReplyMessageOptions,
         PermissionResolvable, Snowflake
     } from 'discord.js';
 
@@ -16,6 +16,8 @@ declare module 'discord-akairo' {
             util?: CommandUtil;
         }
     }
+
+    export type MessageAdditions = MessageEmbed | MessageAttachment | (MessageEmbed | MessageAttachment)[];
 
     export class AkairoError extends Error {
         public code: string;
@@ -159,7 +161,7 @@ declare module 'discord-akairo' {
         public channel?: string;
         public client: AkairoClient;
         public clientPermissions: PermissionResolvable | PermissionResolvable[] | MissingPermissionSupplier;
-        public cooldown?: number;
+        public cooldown?: CooldownSupplier | number;
         public description: string | any;
         public editable: boolean;
         public filepath: string;
@@ -201,7 +203,7 @@ declare module 'discord-akairo' {
         public commandUtils: Collection<string, CommandUtil>;
         public commandUtilSweepInterval: number;
         public cooldowns: Collection<string, { [id: string]: CooldownData }>;
-        public defaultCooldown: number;
+        public defaultCooldown: CooldownSupplier | number;
         public directory: string;
         public fetchMembers: boolean;
         public handleEdits: boolean;
@@ -273,10 +275,18 @@ declare module 'discord-akairo' {
         public shouldEdit: boolean;
 
         public addMessage(message: Message | Message[]): Message | Message[];
-        public edit(options?: string | MessageEditOptions): Promise<Message>;
-        public reply(options?: string | MessageOptions): Promise<Message>;
-        public send(options?: string | MessageOptions): Promise<Message>;
-        public sendNew(options?: string | MessageOptions): Promise<Message>;
+
+        public edit(content: string | MessageEditOptions): Promise<Message>;
+
+        public reply(options: string | (ReplyMessageOptions & { split?: false })): Promise<Message>;
+        public reply(options: (ReplyMessageOptions & { split: true | SplitOptions })): Promise<Message[]>;
+
+        public send(options: string | (MessageOptions & { split?: false })): Promise<Message>;
+        public send(options: (MessageOptions & { split: true | SplitOptions })): Promise<Message[]>;
+
+        public sendNew(options: string | (MessageOptions & { split?: false })): Promise<Message>;
+        public sendNew(options: (MessageOptions & { split: true | SplitOptions })): Promise<Message[]>;
+
         public setEditable(state: boolean): this;
         public setLastResponse(message: Message | Message[]): Message;
 
@@ -537,8 +547,8 @@ declare module 'discord-akairo' {
         channel?: 'guild' | 'dm';
         clientPermissions?: PermissionResolvable | PermissionResolvable[] | MissingPermissionSupplier;
         condition?: ExecutionPredicate;
-        cooldown?: number;
-        description?: string;
+        cooldown?: number | CooldownSupplier;
+        description?: string | any;
         editable?: boolean;
         flags?: string[];
         ignoreCooldown?: Snowflake | Snowflake[] | IgnoreCheckPredicate;
@@ -564,7 +574,7 @@ declare module 'discord-akairo' {
         commandUtil?: boolean;
         commandUtilLifetime?: number;
         commandUtilSweepInterval?: number;
-        defaultCooldown?: number;
+        defaultCooldown?: number | CooldownSupplier;
         fetchMembers?: boolean;
         handleEdits?: boolean;
         ignoreCooldown?: Snowflake | Snowflake[] | IgnoreCheckPredicate;
@@ -653,6 +663,8 @@ declare module 'discord-akairo' {
     export type BeforeAction = (message: Message) => any;
 
     export type DefaultValueSupplier = (message: Message, data: FailureData) => any;
+
+    export type CooldownSupplier = (message: Message) => number;
 
     export type ExecutionPredicate = (message: Message) => boolean;
 
