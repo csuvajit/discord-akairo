@@ -23,7 +23,7 @@ class Command extends AkairoModule {
             ownerOnly = false,
             editable = true,
             typing = false,
-            cooldown = null,
+            cooldown = this.cooldown,
             ratelimit = 1,
             argumentDefaults = {},
             description = '',
@@ -90,7 +90,7 @@ class Command extends AkairoModule {
          * Cooldown in milliseconds.
          * @type {?number}
          */
-        this.cooldown = cooldown;
+        this.cooldown = typeof cooldown === 'function' ? cooldown.bind(this) : cooldown;
 
         /**
          * Uses allowed before cooldown.

@@ -145,7 +145,7 @@ class CommandHandler extends AkairoHandler {
          * Default cooldown for commands.
          * @type {number}
          */
-        this.defaultCooldown = defaultCooldown;
+        this.defaultCooldown = typeof defaultCooldown === 'function' ? defaultCooldown.bind(this) : defaultCooldown;
 
         /**
          * ID of user(s) to ignore cooldown or a function to ignore.
@@ -712,7 +712,13 @@ class CommandHandler extends AkairoHandler {
 
         if (isIgnored) return false;
 
-        const time = command.cooldown != null ? command.cooldown : this.defaultCooldown;
+        const time = command.cooldown != null
+            ? typeof command.cooldown === 'function'
+                ? command.cooldown(message)
+                : command.cooldown
+            : typeof this.defaultCooldown === 'function'
+                ? this.defaultCooldown(message)
+                : this.defaultCooldown;
         if (!time) return false;
 
         const endTime = message.createdTimestamp + time;
@@ -733,7 +739,8 @@ class CommandHandler extends AkairoHandler {
                     }
                 }, time),
                 end: endTime,
-                uses: 0
+                uses: 0,
+                emitted: false
             };
         }
 
@@ -743,7 +750,10 @@ class CommandHandler extends AkairoHandler {
             const end = this.cooldowns.get(message.author.id)[command.id].end;
             const diff = end - message.createdTimestamp;
 
-            this.emit(CommandHandlerEvents.COOLDOWN, message, command, diff);
+            if (!this.cooldowns.get(message.author.id)[command.id].emitted) {
+                this.emit(CommandHandlerEvents.COOLDOWN, message, command, diff);
+                this.cooldowns.get(message.author.id)[command.id].emitted = true;
+            }
             return true;
         }
 
