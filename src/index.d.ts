@@ -2,7 +2,7 @@ declare module 'discord-akairo' {
     import {
         BufferResolvable, Client, ClientOptions, Collection,
         Message, MessageAttachment, MessageEmbed,
-        MessageEditOptions, MessageOptions, SplitOptions,
+        MessageEditOptions, MessageOptions, MessagePayload,
         User, UserResolvable, GuildMember,
         Channel, Role, Emoji, Guild, ReplyMessageOptions,
         PermissionResolvable, Snowflake
@@ -276,16 +276,13 @@ declare module 'discord-akairo' {
 
         public addMessage(message: Message | Message[]): Message | Message[];
 
-        public edit(content: string | MessageEditOptions): Promise<Message>;
+        public edit(content: string | MessageEditOptions | MessagePayload): Promise<Message>;
 
-        public reply(options: string | (ReplyMessageOptions & { split?: false })): Promise<Message>;
-        public reply(options: (ReplyMessageOptions & { split: true | SplitOptions })): Promise<Message[]>;
+        public reply(options: string | MessagePayload | ReplyMessageOptions): Promise<Message>;
 
-        public send(options: string | (MessageOptions & { split?: false })): Promise<Message>;
-        public send(options: (MessageOptions & { split: true | SplitOptions })): Promise<Message[]>;
+        public send(options: string | MessagePayload | MessageOptions): Promise<Message>;
 
-        public sendNew(options: string | (MessageOptions & { split?: false })): Promise<Message>;
-        public sendNew(options: (MessageOptions & { split: true | SplitOptions })): Promise<Message[]>;
+        public sendNew(options: string | MessagePayload | MessageOptions): Promise<Message>;
 
         public setEditable(state: boolean): this;
         public setLastResponse(message: Message | Message[]): Message;

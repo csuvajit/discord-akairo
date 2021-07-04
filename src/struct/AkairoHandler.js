@@ -19,7 +19,7 @@ class AkairoHandler extends EventEmitter {
         classToHandle = AkairoModule,
         extensions = ['.js', '.json', '.ts'],
         automateCategories = false,
-        loadFilter = (() => true)
+        loadFilter = () => true
     }) {
         super();
 
