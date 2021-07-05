@@ -17,8 +17,6 @@ declare module 'discord-akairo' {
         }
     }
 
-    export type MessageAdditions = MessageEmbed | MessageAttachment | (MessageEmbed | MessageAttachment)[];
-
     export class AkairoError extends Error {
         public code: string;
     }
@@ -87,7 +85,7 @@ declare module 'discord-akairo' {
         public match: ArgumentMatch;
         public multipleFlags: boolean;
         public flag?: string | string[];
-        public otherwise?: string | MessageOptions | MessageAdditions | OtherwiseContentSupplier;
+        public otherwise?: string | MessageOptions | OtherwiseContentSupplier;
         public prompt?: ArgumentPromptOptions | boolean;
         public type: ArgumentType | ArgumentTypeCaster;
         public unordered: boolean | number | number[];
@@ -481,7 +479,7 @@ declare module 'discord-akairo' {
 
     export interface DefaultArgumentOptions {
         prompt?: ArgumentPromptOptions;
-        otherwise?: string | MessageOptions | MessageAdditions | OtherwiseContentSupplier;
+        otherwise?: string | MessageOptions | OtherwiseContentSupplier;
         modifyOtherwise?: OtherwiseContentModifier;
     }
 
@@ -495,7 +493,7 @@ declare module 'discord-akairo' {
         modifyOtherwise?: OtherwiseContentModifier;
         multipleFlags?: boolean;
         flag?: string | string[];
-        otherwise?: string | MessageOptions | MessageAdditions | OtherwiseContentSupplier;
+        otherwise?: string | MessageOptions | OtherwiseContentSupplier;
         prompt?: ArgumentPromptOptions | boolean;
         type?: ArgumentType | ArgumentTypeCaster;
         unordered?: boolean | number | number[];
@@ -511,9 +509,9 @@ declare module 'discord-akairo' {
 
     export interface ArgumentPromptOptions {
         breakout?: boolean;
-        cancel?: string | MessageOptions | MessageAdditions | PromptContentSupplier;
+        cancel?: string | MessageOptions | PromptContentSupplier;
         cancelWord?: string;
-        ended?: string | MessageOptions | MessageAdditions | PromptContentSupplier;
+        ended?: string | MessageOptions | PromptContentSupplier;
         infinite?: boolean;
         limit?: number;
         modifyCancel?: PromptContentModifier;
@@ -523,11 +521,11 @@ declare module 'discord-akairo' {
         modifyTimeout?: PromptContentModifier;
         optional?: boolean;
         retries?: number;
-        retry?: string | MessageOptions | MessageAdditions | PromptContentSupplier;
-        start?: string | MessageOptions | MessageAdditions | PromptContentSupplier;
+        retry?: string | MessageOptions | PromptContentSupplier;
+        start?: string | MessageOptions | PromptContentSupplier;
         stopWord?: string;
         time?: number;
-        timeout?: string | MessageOptions | MessageAdditions | PromptContentSupplier;
+        timeout?: string | MessageOptions | PromptContentSupplier;
     }
 
     export interface ArgumentRunnerState {
@@ -676,20 +674,20 @@ declare module 'discord-akairo' {
     export type MissingPermissionSupplier = (message: Message) => Promise<any> | any;
 
     export type OtherwiseContentModifier = (message: Message, text: string, data: FailureData)
-        => string | MessageOptions | MessageAdditions | Promise<string | MessageOptions | MessageAdditions>;
+        => string | MessageOptions | Promise<string | MessageOptions>;
 
     export type OtherwiseContentSupplier = (message: Message, data: FailureData)
-        => string | MessageOptions | MessageAdditions | Promise<string | MessageOptions | MessageAdditions>;
+        => string | MessageOptions | Promise<string | MessageOptions>;
 
     export type ParsedValuePredicate = (message: Message, phrase: string, value: any) => boolean;
 
     export type PrefixSupplier = (message: Message) => string | string[] | Promise<string | string[]>;
 
     export type PromptContentModifier = (message: Message, text: string, data: ArgumentPromptData)
-        => string | MessageOptions | MessageAdditions | Promise<string | MessageOptions | MessageAdditions>;
+        => string | MessageOptions | Promise<string | MessageOptions>;
 
     export type PromptContentSupplier = (message: Message, data: ArgumentPromptData)
-        => string | MessageOptions | MessageAdditions | Promise<string | MessageOptions | MessageAdditions>;
+        => string | MessageOptions | Promise<string | MessageOptions>;
 
     export type RegexSupplier = (message: Message) => RegExp;
 
