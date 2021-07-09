@@ -39,6 +39,6 @@
     },
     "homepage": "https://github.com/discord-akairo/discord-akairo",
     "dependencies": {
-        "discord.js": "^13.0.0-dev.755c180.1625616230"
+        "discord.js": "^13.0.0-dev.5b6be0c.1625789033"
     }
 }
